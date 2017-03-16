@@ -1,0 +1,161 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const request = require('request'),
+  utils = require('../lib/utils.js');
+
+/*
+ * Local executor for Amazon Lambda function
+ */
+(function() {
+
+    var logger = require('winston');
+    logger.level = 'info';
+    logger.configure({
+        transports: [
+            new (logger.transports.Console)({handleExceptions: true, json: false, colorize: true})
+        ]
+    });
+
+    var lambdaLocal = require('../lib/lambdalocal.js'),
+        utils = require('../lib/utils.js');
+    lambdaLocal.setLogger(logger);
+
+    // process opts
+    var program = require('commander');
+    program
+        .option('-l, --lambda-path <lambda index path>', '(required) Lambda function file name.')
+        .option('-e, --event-path <path>', '(required) Event data file name.')
+        .option('-h, --handler <handler name>',
+            '(optional) Lambda function handler name. Default is \'handler\'.')
+        .option('-t, --timeout <timeout seconds>',
+            '(optional) Seconds until lambda function timeout. Default is 3 seconds.')
+        .option('-n, --no-force-callback',
+            '(optional) Force the function to stop after having called the handler function' +
+            ' even if context.done/succeed/fail was not called.')
+        .option('-r, --region <aws region>',
+            '(optional) default set to us-east-1')
+        .option('-p, --profile <aws profile name>',
+            '(optional) Read the AWS profile to get the credentials from profile name')
+        .option('-P, --profile-path <aws credentials path>',
+            '(optional) Read the specified AWS credentials file')
+        .parse(process.argv);
+
+    var eventPath = program.eventPath,
+        lambdaPath = program.lambdaPath,
+        lambdaHandler = program.handler,
+        profilePath = program.profilePath,
+        profileName = program.profile,
+        region = program.region,
+        callbackWaitsForEmptyEventLoop = program.noForceCallback;
+
+    if (!lambdaPath || !eventPath) {
+        program.help();
+    }
+
+    // default handler name
+    if (!lambdaHandler) {
+        lambdaHandler = 'handler';
+    }
+
+    //default callbackWaitsForEmptyEventLoop
+    if (!callbackWaitsForEmptyEventLoop) {
+        callbackWaitsForEmptyEventLoop = false;
+    } else {
+        callbackWaitsForEmptyEventLoop = true;
+    }
+
+    // timeout milliseconds
+    var timeoutMs;
+    if (program.timeout) {
+        timeoutMs = program.timeout * 1000;
+    } else {
+        timeoutMs = 3000;
+    }
+
+    var event = require(utils.getAbsolutePath(eventPath));
+    const load_post_object = JSON.parse(JSON.stringify(event));
+    delete load_post_object.method;
+    const load_post_data = JSON.stringify(load_post_object);
+
+    const https_options = {
+      method: 'POST',
+      url: `${process.env.xim_url}/loadExtraPayload`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(load_post_data),
+      },
+    };
+
+    const req = request(https_options, (error, response, load_body) => {
+      const bodyJSON = JSON.parse(JSON.parse(load_body));
+      if (typeof bodyJSON.message !== 'undefined') {
+        // TO-do: error handling
+      }
+      event.xim_content = bodyJSON.xim_content;
+      // execute
+      lambdaLocal.execute({
+          event: event,
+          lambdaPath: lambdaPath,
+          lambdaHandler: lambdaHandler,
+          profilePath: profilePath,
+          profileName: profileName,
+          region: region,
+          callbackWaitsForEmptyEventLoop: callbackWaitsForEmptyEventLoop,
+          timeoutMs: timeoutMs,
+          callback: function(err , data) { //data unused
+              logger.log('info', '-----');
+              if (err === null) {
+                const result_json = JSON.parse(data.body);
+                const save_post_object = JSON.parse(JSON.stringify(event));
+                save_post_object.quantum_token = load_post_object.quantum_token;
+                const save_post_data = JSON.stringify(save_post_object);
+
+                const https_options = {
+                  method: 'POST',
+                  url: `${process.env.xim_url}/saveExtraPayload`,
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(save_post_data),
+                  },
+                };
+
+                const req = request(https_options, (error, response, save_body) => {
+                  delete result_json.method;
+                  delete result_json.xim_content;
+                  logger.log('info', 'Message');
+                  logger.log('info', '------');
+                  utils.outputJSON(result_json, logger);
+                  logger.log('info', 'lambda-local successfully complete.');
+                  process.exit(0);
+                });
+
+                req.write(save_post_data);
+                req.end();
+
+
+              } else {
+                  logger.log('error', 'lambda-local failed.');
+                  // Finish the process
+                  process.exit(1);
+              }
+          }
+      });
+
+    });
+
+    req.write(load_post_data);
+    req.end();
+
+
+
+
+    // Handling timeout
+    setTimeout(function() {
+        logger.log('error', '-----');
+        logger.log('error', 'Task timed out after ' + (timeoutMs / 1000).toFixed(2) + ' seconds');
+        process.exit();
+    }, timeoutMs);
+
+})();

@@ -1,0 +1,37 @@
+{
+  "name": "xim-driver-light-lifx",
+  "version": "0.0.1",
+  "description": "Qblinks Quantum Cloud XIM Driver for Light/LIFX.",
+  "scripts": {
+    "install": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/qblinks/quantum_xim_light_lifx"
+  },
+  "keywords": [
+    "git",
+    "hooks",
+    "npm",
+    "pre-commit",
+    "precommit"
+  ],
+  "homepage": "https://github.com/qblinks/quantum_xim_light_lifx",
+  "license": "GPLv3",
+  "devDependencies": {
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-ejs": "0.0.2",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.7.1"
+  },
+  "dependencies": {
+    "winston": "^2.3.1",
+    "color-convert": "^1.8.2",
+    "mathjs": "^3.8.1",
+    "request": "^2.79.0",
+    "path": "^0.12.7",
+    "lambda-local": "^1.4.2"
+  }
+}
