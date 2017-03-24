@@ -11,8 +11,6 @@
 
 'use strict';
 
-const request = require('request');
-
  /**
   * Deactivate this channel
   *
@@ -22,34 +20,7 @@ const request = require('request');
   * @param {function} callback to be used by the XIM driver
   */
 function unlink(opt, callback) {
-  const set = opt.xim_channel_set;
-  const options = {
-    method: 'DELETE',
-    url: `${process.env.auth_url}/token/lifx/${set}`,
-    headers: {
-      Authorization: `Bearer ${opt.quantum_token}`,
-    },
-  };
-
-  request(options, (error, response, body) => {
-    if (error) {
-      throw new Error('invalid operation or not implemented yet');
-    } else {
-      const jsonObj = JSON.parse(body);
-      const my_xim_list = opt;
-      if (jsonObj.result === true) {
-        my_xim_list.result = {};
-        my_xim_list.result.err_no = 0;
-        my_xim_list.result.err_msg = 'ok';
-        callback(my_xim_list);
-      } else {
-        my_xim_list.result = {};
-        my_xim_list.result.err_no = 0;
-        my_xim_list.result.err_msg = 'No available token.';
-        callback(my_xim_list);
-      }
-    }
-  });
+  callback(opt);
 }
 
 
