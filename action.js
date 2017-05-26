@@ -91,34 +91,34 @@ function action(opt, callback) {
     return;
   }
 
-  if (typeof opt.light_action.hue !== 'undefined' &&
-        typeof opt.light_action.saturation !== 'undefined' &&
-        typeof opt.light_action.brightness !== 'undefined') {
-    my_color = `hue:${opt.light_action.hue}`;
-  } else if (typeof opt.light_action.rgb !== 'undefined') {
-    my_color = opt.light_action.rgb;
-  } else if (typeof opt.light_action.short_color_code !== 'undefined') {
-    my_color = opt.light_action.short_color_code;
+  if (typeof opt.action.hue !== 'undefined' &&
+        typeof opt.action.saturation !== 'undefined' &&
+        typeof opt.action.brightness !== 'undefined') {
+    my_color = `hue:${opt.action.hue}`;
+  } else if (typeof opt.action.rgb !== 'undefined') {
+    my_color = opt.action.rgb;
+  } else if (typeof opt.action.short_color_code !== 'undefined') {
+    my_color = opt.action.short_color_code;
   }
 
-  if (typeof opt.light_action.saturation !== 'undefined') {
-    my_color += ` saturation:${opt.light_action.saturation / 100}`;
+  if (typeof opt.action.saturation !== 'undefined') {
+    my_color += ` saturation:${opt.action.saturation / 100}`;
   }
-  if (typeof opt.light_action.brightness !== 'undefined') {
-    my_color += ` brightness:${opt.light_action.brightness / 100}`;
+  if (typeof opt.action.brightness !== 'undefined') {
+    my_color += ` brightness:${opt.action.brightness / 100}`;
   }
 
-  if (typeof opt.light_action.onoff !== 'undefined') {
-    if (opt.light_action.onoff === true) {
+  if (typeof opt.action.onoff !== 'undefined') {
+    if (opt.action.onoff === true) {
       my_power = 'on';
     }
-    if (opt.light_action.onoff === false) {
+    if (opt.action.onoff === false) {
       my_power = 'off';
     }
   }
 
   if (my_color !== '') {
-    if (opt.light_action.toggle === true) {
+    if (opt.action.toggle === true) {
       /* toggle + color */
       options_toggle = {
         method: 'POST',
@@ -135,9 +135,10 @@ function action(opt, callback) {
         headers: {
           Authorization: `Bearer ${opt.xim_content.accessToken}`,
         },
-        formData: {
+        'content-type': 'application/json',
+        body: JSON.stringify({
           color: my_color.trim(),
-        },
+        }),
       };
       my_request(options_onoff, 1);
     } else if (my_power !== '') {
@@ -148,10 +149,11 @@ function action(opt, callback) {
         headers: {
           Authorization: `Bearer ${opt.xim_content.accessToken}`,
         },
-        formData: {
+        'content-type': 'application/json',
+        body: JSON.stringify({
           power: my_power,
           color: my_color.trim(),
-        },
+        }),
       };
       my_request(options_onoff, 1);
     } else {
@@ -162,16 +164,17 @@ function action(opt, callback) {
         headers: {
           Authorization: `Bearer ${opt.xim_content.accessToken}`,
         },
-        formData: {
+        'content-type': 'application/json',
+        body: JSON.stringify({
           color: my_color.trim(),
-        },
+        }),
       };
       my_request(options_onoff, 1);
     }
   }
 
   if (my_color === '') {
-    if (opt.light_action.toggle === true) {
+    if (opt.action.toggle === true) {
       /* toggle only */
       options_toggle = {
         method: 'POST',
@@ -189,9 +192,10 @@ function action(opt, callback) {
         headers: {
           Authorization: `Bearer ${opt.xim_content.accessToken}`,
         },
-        formData: {
+        'content-type': 'application/json',
+        body: JSON.stringify({
           power: my_power,
-        },
+        }),
       };
       my_request(options_onoff, 1);
     }
