@@ -21,7 +21,11 @@ const merge = require('merge');
  */
 function authenticate(options, callback) {
   const output = merge({}, options);
-  output.xim_content.accessToken = options.access_token;
+  output.xim_content.accessToken = options.xim_content.access_token;
+  output.result = {
+    err_no: 0,
+    err_msg: 'ok',
+  };
   callback(output);
 }
 

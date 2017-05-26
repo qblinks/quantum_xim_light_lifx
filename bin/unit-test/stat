@@ -12,4 +12,4 @@
 
 FUNC_NAME=`basename $0 | sed 's/\(\..*\)$//'`
 
-lambda-local -l index.js -h handler -e event-samples/$FUNC_NAME.js -t 60
+quantum-local -l index.js -h handler -e event-samples/$FUNC_NAME.js -t 60
