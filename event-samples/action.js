@@ -18,10 +18,10 @@ module.exports = {
   method: 'action',
   xim_type: 'light',
   xim_channel: 'lifx',
-  xim_channel_set: 0,
+  xim_channel_set: 1,
   quantum_token: my_quantum_token,
   device_id: my_device_id,
-  light_action: {
+  action: {
     onoff: true,
   },
 };

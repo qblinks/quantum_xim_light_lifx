@@ -27,11 +27,12 @@
     "eslint-plugin-react": "^6.7.1"
   },
   "dependencies": {
-    "winston": "^2.3.1",
     "color-convert": "^1.8.2",
+    "lambda-local": "^1.4.2",
     "mathjs": "^3.8.1",
-    "request": "^2.79.0",
+    "merge": "^1.2.0",
     "path": "^0.12.7",
-    "lambda-local": "^1.4.2"
+    "request": "^2.79.0",
+    "winston": "^2.3.1"
   }
 }

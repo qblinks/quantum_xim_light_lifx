@@ -35,12 +35,10 @@ exports.handler = (event, context, callback) => {
     const type = event.xim_type;
     const channel = event.xim_channel;
     const set = event.xim_channel_set;
-    const token = event.quantum_token;
 
     if (type === undefined ||
       channel === undefined ||
-      set === undefined ||
-      token === undefined
+      set === undefined
     ) {
       result_statusCode = 422;
       result_body = JSON.stringify({
