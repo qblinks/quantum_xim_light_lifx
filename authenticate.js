@@ -21,11 +21,21 @@ const merge = require('merge');
  */
 function authenticate(options, callback) {
   const output = merge({}, options);
-  output.xim_content.accessToken = options.xim_content.access_token;
-  output.result = {
-    err_no: 0,
-    err_msg: 'ok',
-  };
+  const xim_content = options.xim_content || {};
+  const access_token = xim_content.access_token || '';
+
+  if (access_token.length > 0) {
+    output.xim_content.accessToken = options.xim_content.access_token;
+    output.result = {
+      err_no: 0,
+      err_msg: 'ok',
+    };
+  } else {
+    output.result = {
+      err_no: 113,
+      err_msg: 'No Access Token',
+    };
+  }
   callback(output);
 }
 
