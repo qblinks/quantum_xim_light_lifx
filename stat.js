@@ -75,7 +75,7 @@ function stat(opt, callback) {
           } else {
             light.infrared_support = true;
           }
-          light.toggle_support = true;
+          light.native_toggle_support = true;
           light.light_status = {};
           light.light_status.hue = Math.round(lifx_light.color.hue);
           light.light_status.saturation = Math.round(lifx_light.color.saturation * 100);
