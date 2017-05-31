@@ -51,6 +51,7 @@ function stat(opt, callback) {
     } else {
       const jsonObj = JSON.parse(body);
       const my_xim_list = {};
+      my_xim_list.xim_content = opt.xim_content;
       my_xim_list.xim_type = opt.xim_type;
       my_xim_list.xim_channel = opt.xim_channel;
       my_xim_list.xim_channel_set = opt.xim_channel_set;
