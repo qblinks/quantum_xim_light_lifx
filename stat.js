@@ -23,16 +23,16 @@ function stat(opt, callback) {
   const result_options = opt;
   if (typeof opt.xim_content === 'undefined') {
     result_options.result = {
-      err_no: 999,
-      err_msg: 'xim_content undefined.',
+      err_no: 113,
+      err_msg: 'No Access Token',
     };
     callback(result_options);
     return;
   }
   if (typeof opt.xim_content.accessToken === 'undefined') {
     result_options.result = {
-      err_no: 999,
-      err_msg: 'cannot get access token.',
+      err_no: 113,
+      err_msg: 'No Access Token',
     };
     callback(result_options);
     return;
