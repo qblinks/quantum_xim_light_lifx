@@ -80,6 +80,7 @@ function discovery(opt, callback) {
             light.infrared_support = false;
           }
           light.native_toggle_support = true;
+          light.is_group = false;
           light.light_status = {};
           light.light_status.hue = Math.round(jsonObj[i].color.hue);
           light.light_status.saturation = Math.round(jsonObj[i].color.saturation * 100);
