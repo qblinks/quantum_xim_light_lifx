@@ -87,6 +87,8 @@ const request = require('request'),
       },
     };
 
+    console.log('load_post_data:');
+    console.log(load_post_data);
     // Load extra payload before call local XIM driver.
     const req = request(https_options, (error, response, load_body) => {
       console.log(load_body);

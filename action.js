@@ -61,6 +61,7 @@ function action(opt, callback) {
               const light = {};
               light.device_id = lifx_light.id;
               light.device_name = lifx_light.label;
+              light.is_group = false;
               light.action_result = lifx_light.status;
               my_xim_list.list.push(light);
             });
