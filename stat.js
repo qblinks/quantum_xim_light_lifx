@@ -58,8 +58,8 @@ function stat(opt, callback) {
       my_xim_list.quantum_token = opt.quantum_token;
       if (jsonObj.length === 0 || jsonObj.error) {
         my_xim_list.result = {};
-        my_xim_list.result.err_no = 999;
-        my_xim_list.result.err_msg = 'no lights data';
+        my_xim_list.result.err_no = 114;
+        my_xim_list.result.err_msg = 'Device Not Exists';
       } else {
         my_xim_list.list = [];
         const light = {};
