@@ -40,9 +40,18 @@ function action(opt, callback) {
     } else {
       request(options, (error, response, body) => {
         if (error) {
+          console.error('my_request: fail');
+          console.error(error);
+          console.error(response);
+          console.error(options);
           throw new Error('invalid operation or not implemented yet');
         } else {
           const jsonObj = JSON.parse(body);
+
+          console.error('my_request: success');
+          console.error(jsonObj);
+          console.error(options);
+
           if (typeof jsonObj.error !== 'undefined') {
             const my_xim_list = {};
             my_xim_list.result = {};
