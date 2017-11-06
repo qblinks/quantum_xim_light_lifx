@@ -23,6 +23,8 @@ const request = require('request');
  * @param {function} callback callback of this function
  */
 function action(opt, callback) {
+  console.log('action: opt:');
+  console.log(opt);
   let options_toggle = {};
   let options_onoff = {};
   let my_color = '';
