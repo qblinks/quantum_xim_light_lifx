@@ -57,8 +57,15 @@ function action(opt, callback) {
           if (typeof jsonObj.error !== 'undefined') {
             const my_xim_list = {};
             my_xim_list.result = {};
-            my_xim_list.result.err_no = 999;
-            my_xim_list.result.err_msg = jsonObj.error;
+            if (jsonObj.error.match(/Could not find/)) {
+              my_xim_list.result.err_no = 114;
+              my_xim_list.result.err_msg = 'Device Not Exists';
+              my_xim_list.result.err_detail = jsonObj.error;  
+            } else {
+              my_xim_list.result.err_no = 999;
+              my_xim_list.result.err_msg = jsonObj.error;
+              my_xim_list.result.err_detail = jsonObj.error;  
+            }
             callback(my_xim_list);
           } else {
             const my_xim_list = {};
