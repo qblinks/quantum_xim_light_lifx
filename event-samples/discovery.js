@@ -9,10 +9,14 @@
  * expressly prescribing the scope and manner of such use.
  */
 
+const xim_config = require('../.xim_config.js');
+
+const my_quantum_token = xim_config[process.env.NODE_ENV].quantum_token;
 
 module.exports = {
   method: 'discovery',
   xim_type: 'light',
   xim_channel: 'lifx',
   xim_channel_set: 0,
+  quantum_token: my_quantum_token,
 };

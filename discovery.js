@@ -21,6 +21,7 @@ const request = require('request');
  */
 function discovery(opt, callback) {
   const result_options = opt;
+  console.log('opt:', opt);
   if (typeof opt.xim_content === 'undefined') {
     result_options.result = {
       err_no: 113,
@@ -51,8 +52,20 @@ function discovery(opt, callback) {
     } else {
       const jsonObj = JSON.parse(body);
 
+      console.log('jsonObj:', jsonObj);
+
       const my_xim_list = opt;
-      if (jsonObj.length === 0) {
+      if (jsonObj.error) {
+        if (jsonObj.error.match(/Invalid token/)) {
+          my_xim_list.result = {};
+          my_xim_list.result.err_no = 110;
+          my_xim_list.result.err_msg = 'Invalid Access Token';
+        } else {
+          my_xim_list.result = {};
+          my_xim_list.result.err_no = 201;
+          my_xim_list.result.err_msg = 'Invalid Output';
+        }
+      } else if (jsonObj.length === 0) {
         my_xim_list.result = {};
         my_xim_list.result.err_no = 999;
         my_xim_list.result.err_msg = 'no lights data';
